@@ -1,3 +1,4 @@
+// importation des classes
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -13,8 +14,9 @@ public class Tetris extends JPanel {
 
 	private static final long serialVersionUID = -8715353373678321308L;
 
+    // création des pièces
 	private final Point[][][] Tetraminos = {
-			// I-Piece
+			// I
 			{
 				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
@@ -22,7 +24,7 @@ public class Tetris extends JPanel {
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
 			},
 			
-			// J-Piece
+			// J
 			{
 				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
@@ -30,7 +32,7 @@ public class Tetris extends JPanel {
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
 			},
 			
-			// L-Piece
+			// L
 			{
 				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
@@ -38,7 +40,7 @@ public class Tetris extends JPanel {
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
 			},
 			
-			// O-Piece
+			// O
 			{
 				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
 				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
@@ -46,7 +48,7 @@ public class Tetris extends JPanel {
 				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
 			},
 			
-			// S-Piece
+			// S
 			{
 				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
 				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
@@ -54,7 +56,7 @@ public class Tetris extends JPanel {
 				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
 			},
 			
-			// T-Piece
+			// T
 			{
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
@@ -62,7 +64,7 @@ public class Tetris extends JPanel {
 				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
 			},
 			
-			// Z-Piece
+			// Z
 			{
 				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
@@ -70,7 +72,7 @@ public class Tetris extends JPanel {
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
 			}
 	};
-	
+	// les différentes couleurs
 	private final Color[] tetraminoColors = {
 		Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red
 	};
@@ -83,7 +85,7 @@ public class Tetris extends JPanel {
 	private long score;
 	private Color[][] well;
 	
-	// Creates a border around the well and initializes the dropping piece
+	// création de la bordure et initialisation des pièces qui tombent
 	private void init() {
 		well = new Color[12][24];
 		for (int i = 0; i < 12; i++) {
@@ -98,7 +100,7 @@ public class Tetris extends JPanel {
 		newPiece();
 	}
 	
-	// Put a new, random piece into the dropping position
+	// envoie d'une nouvelle pièce au hasard
 	public void newPiece() {
 		pieceOrigin = new Point(5, 2);
 		rotation = 0;
@@ -110,7 +112,7 @@ public class Tetris extends JPanel {
 		nextPieces.remove(0);
 	}
 	
-	// Collision test for the dropping piece
+	// vérification si la pièce tombante touche une autre pièce
 	private boolean collidesAt(int x, int y, int rotation) {
 		for (Point p : Tetraminos[currentPiece][rotation]) {
 			if (well[p.x + x][p.y + y] != Color.BLACK) {
@@ -120,7 +122,7 @@ public class Tetris extends JPanel {
 		return false;
 	}
 	
-	// Rotate the piece clockwise or counterclockwise
+	// rotation de la pièce dans le sens des aiguilles d'une montre ou dans le sens inverse des aiguilles d'une montre
 	public void rotate(int i) {
 		int newRotation = (rotation + i) % 4;
 		if (newRotation < 0) {
@@ -132,7 +134,7 @@ public class Tetris extends JPanel {
 		repaint();
 	}
 	
-	// Move the piece left or right
+	// déplacement de la pièce vers la gauche ou vers la droite
 	public void move(int i) {
 		if (!collidesAt(pieceOrigin.x + i, pieceOrigin.y, rotation)) {
 			pieceOrigin.x += i;	
@@ -140,7 +142,7 @@ public class Tetris extends JPanel {
 		repaint();
 	}
 	
-	// Drops the piece one line or fixes it to the well if it can't drop
+	// laisse tomber la pièce ou la fixe si elle ne peut pas descendre plus
 	public void dropDown() {
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) {
 			pieceOrigin.y += 1;
@@ -150,8 +152,7 @@ public class Tetris extends JPanel {
 		repaint();
 	}
 	
-	// Make the dropping piece part of the well, so it is available for
-	// collision detection.
+	// fait en sorte que la pièce fasse partie du système afin qu'elle soit détecter pour la collision
 	public void fixToWell() {
 		for (Point p : Tetraminos[currentPiece][rotation]) {
 			well[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetraminoColors[currentPiece];
@@ -168,8 +169,7 @@ public class Tetris extends JPanel {
 		}
 	}
 	
-	// Clear completed rows from the field and award score according to
-	// the number of simultaneously cleared rows.
+	// effacement des rangées complétées et attribution du score en fonction du nombre de lignes supprimées
 	public void clearRows() {
 		boolean gap;
 		int numClears = 0;
@@ -205,7 +205,7 @@ public class Tetris extends JPanel {
 		}
 	}
 	
-	// Draw the falling piece
+	// dessine la pièce qui tombe
 	private void drawPiece(Graphics g) {		
 		g.setColor(tetraminoColors[currentPiece]);
 		for (Point p : Tetraminos[currentPiece][rotation]) {
@@ -275,7 +275,7 @@ public class Tetris extends JPanel {
 			}
 		});
 		
-		// Make the falling piece drop every second
+		// fait tomber la pièce à chaque seconde
 		new Thread() {
 			@Override public void run() {
 				while (true) {
