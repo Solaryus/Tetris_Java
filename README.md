@@ -1,2 +1,2 @@
 # Tetris_Java
-Projet de l'atelier Mastercamp
+Projet de l'atelier IT Mastercamp
