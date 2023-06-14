@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 public class Tetris extends JPanel {
 
 	private static final long serialVersionUID = -8715353373678321308L;
+	
 
     // création des pièces
 	private final Point[][][] Tetraminos = {
@@ -85,6 +86,8 @@ public class Tetris extends JPanel {
 	private long score;
 	private Color[][] well;
 	
+	private static boolean gameOver;
+
 	// création de la bordure et initialisation des pièces qui tombent
 	private void init() {
 		well = new Color[12][24];
@@ -112,6 +115,17 @@ public class Tetris extends JPanel {
 		nextPieces.remove(0);
 	}
 	
+
+	public void checkGameOver() {
+		if (collidesAt(pieceOrigin.x, pieceOrigin.y, rotation)) {
+			// La pièce est arrêtée en haut, le jeu est terminé
+			System.out.println("Game Over");
+			gameOver = true;
+			// Arrêtez ici toute logique de jeu supplémentaire, comme l'arrêt du thread qui fait tomber la pièce
+		}
+	}
+
+
 	// vérification si la pièce tombante touche une autre pièce
 	private boolean collidesAt(int x, int y, int rotation) {
 		for (Point p : Tetraminos[currentPiece][rotation]) {
@@ -139,6 +153,7 @@ public class Tetris extends JPanel {
 		if (!collidesAt(pieceOrigin.x + i, pieceOrigin.y, rotation)) {
 			pieceOrigin.x += i;	
 		}
+		checkGameOver();
 		repaint();
 	}
 	
@@ -148,6 +163,7 @@ public class Tetris extends JPanel {
 			pieceOrigin.y += 1;
 		} else {
 			fixToWell();
+			checkGameOver();
 		}	
 		repaint();
 	}
@@ -218,7 +234,7 @@ public class Tetris extends JPanel {
 	@Override 
 	public void paintComponent(Graphics g)
 	{
-		// Paint the well
+		// dessine le composant
 		g.fillRect(0, 0, 26*12, 26*23);
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
@@ -227,11 +243,11 @@ public class Tetris extends JPanel {
 			}
 		}
 		
-		// Display the score
+		// effiche le score
 		g.setColor(Color.WHITE);
 		g.drawString("" + score, 19*12, 25);
 		
-		// Draw the currently falling piece
+		// dessine la pièce qui tombe actuellement
 		drawPiece(g);
 	}
 
@@ -281,7 +297,9 @@ public class Tetris extends JPanel {
 				while (true) {
 					try {
 						Thread.sleep(1000);
-						game.dropDown();
+						if(!gameOver){
+							game.dropDown();
+						}
 					} catch ( InterruptedException e ) {}
 				}
 			}
