@@ -243,13 +243,32 @@ public class Tetris extends JPanel {
 				g.fillRect(26*i, 26*j, 25, 25);
 			}
 		}
-		
+
+
 		// affiche le score
 		g.setColor(Color.WHITE);
 		g.drawString("" + score, 19*12, 25);
 		
 		// dessine la pièce qui tombe actuellement
-		drawPiece(g);
+		drawPiece(g);		
+		// Afficher la prochaine pièce
+		drawNextPiece(g);
+	}
+
+	private void drawNextPiece(Graphics g) {	
+		int blockSize = 25;
+		int startX = 19 * blockSize;
+		int startY = 110;
+	
+		int nextPiece = nextPieces.get(0);
+
+	
+		g.setColor(tetraminoColors[nextPiece]);
+		for (Point p : Tetraminos[nextPiece][0]) {
+			int x = 25 + p.x * blockSize;
+			int y = p.y * blockSize;
+			g.fillRect(x, y, blockSize, blockSize);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -276,7 +295,6 @@ public class Tetris extends JPanel {
 					break;
 				case KeyEvent.VK_DOWN:
 					game.dropDown(); // accélération de la pièce après maintient la flèche du bas
-					game.score += 1;
 					break;
 				case KeyEvent.VK_LEFT:
 					game.move(-1); // déplacement d'une case vers la gauche après appuie sur la flèche de gauche
