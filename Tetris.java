@@ -78,17 +78,16 @@ public class Tetris extends JPanel {
 		Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red
 	};
 	
-	private Point pieceOrigin;
+	private Point pieceOrigin; // point d'apparition de la pièce
 	private int currentPiece;
 	private int rotation;
-	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
+	private ArrayList<Integer> nextPieces = new ArrayList<Integer>(); // pièce suivante
 
-	private long score;
-	private Color[][] well;
+	private long score; // score
+	private Color[][] well; // plateau de jeu avec les cases qui sont des couleurs
 	
 	private static boolean gameOver;
-	static boolean isShiftPressed; // Variable pour vérifier si la touche Maj droite est enfoncée
-
+	
 	// création de la bordure et initialisation des pièces qui tombent
 	private void init() {
 		well = new Color[12][24];
@@ -101,12 +100,12 @@ public class Tetris extends JPanel {
 				}
 			}
 		}
-		newPiece();
+		newPiece(); // création d'une pièce
 	}
 	
 	// envoie d'une nouvelle pièce au hasard
 	public void newPiece() {
-		pieceOrigin = new Point(5, 2);
+		pieceOrigin = new Point(5, 2); // point d'apparition du centre de la pièce
 		rotation = 0;
 		if (nextPieces.isEmpty()) {
 			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
@@ -206,18 +205,19 @@ public class Tetris extends JPanel {
 			}
 		}
 		
+		// calcul du score
 		switch (numClears) {
 		case 1:
-			score += 100;
+			score += 100; // ajout de 100 points pour 1 ligne supprimée
 			break;
 		case 2:
-			score += 300;
+			score += 300; // ajout de 300 points pour 2 lignes supprimées
 			break;
 		case 3:
-			score += 500;
+			score += 500; // ajout de 500 points pour 3 lignes supprimées
 			break;
 		case 4:
-			score += 800;
+			score += 800; // ajout de 800 points pour 4 lignes supprimées
 			break;
 		}
 	}
@@ -244,7 +244,7 @@ public class Tetris extends JPanel {
 			}
 		}
 		
-		// effiche le score
+		// affiche le score
 		g.setColor(Color.WHITE);
 		g.drawString("" + score, 19*12, 25);
 		
@@ -272,29 +272,23 @@ public class Tetris extends JPanel {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_UP:
-					game.rotate(-1);
+					game.rotate(-1); // rotation après un appuie sur la flèche du haut
 					break;
 				case KeyEvent.VK_DOWN:
-					isShiftPressed = true; // La touche Maj droite est enfoncée
-					break;
-				case KeyEvent.VK_LEFT:
-					game.move(-1);
-					break;
-				case KeyEvent.VK_RIGHT:
-					game.move(+1);
-					break;
-				case KeyEvent.VK_SPACE:
-					game.dropDown();
+					game.dropDown(); // accélération de la pièce après maintient la flèche du bas
 					game.score += 1;
 					break;
+				case KeyEvent.VK_LEFT:
+					game.move(-1); // déplacement d'une case vers la gauche après appuie sur la flèche de gauche
+					break;
+				case KeyEvent.VK_RIGHT:
+					game.move(+1); // déplacement d'une case vers la droite après appuie sur la flèche de droite
+					break;					
 				} 
 				
 			}
 			
 			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-					isShiftPressed = false; // La touche Maj droite est relâchée
-				}
 			}
 		});
 		
@@ -302,10 +296,9 @@ public class Tetris extends JPanel {
 		new Thread() {
 			@Override public void run() {
 				while (true) {
-					try {
-						int delay = isShiftPressed ? 100 : 1000;
-						
-						Thread.sleep(delay);
+					try {					
+						Thread.sleep(1000);
+
 						if(!gameOver){
 							game.dropDown();
 						}
