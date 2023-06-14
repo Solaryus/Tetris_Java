@@ -87,6 +87,7 @@ public class Tetris extends JPanel {
 	private Color[][] well;
 	
 	private static boolean gameOver;
+	static boolean isShiftPressed; // Variable pour vérifier si la touche Maj droite est enfoncée
 
 	// création de la bordure et initialisation des pièces qui tombent
 	private void init() {
@@ -263,6 +264,8 @@ public class Tetris extends JPanel {
 		
 		// Keyboard controls
 		f.addKeyListener(new KeyListener() {
+			
+
 			public void keyTyped(KeyEvent e) {
 			}
 			
@@ -284,10 +287,17 @@ public class Tetris extends JPanel {
 					game.dropDown();
 					game.score += 1;
 					break;
+				case KeyEvent.VK_SHIFT:
+					isShiftPressed = true; // La touche Maj droite est enfoncée
+					break;
 				} 
+				
 			}
 			
 			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+					isShiftPressed = false; // La touche Maj droite est relâchée
+				}
 			}
 		});
 		
@@ -296,7 +306,9 @@ public class Tetris extends JPanel {
 			@Override public void run() {
 				while (true) {
 					try {
-						Thread.sleep(1000);
+						int delay = isShiftPressed ? 100 : 1000;
+						
+						Thread.sleep(delay);
 						if(!gameOver){
 							game.dropDown();
 						}
