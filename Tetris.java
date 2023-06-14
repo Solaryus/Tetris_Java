@@ -275,7 +275,7 @@ public class Tetris extends JPanel {
 					game.rotate(-1);
 					break;
 				case KeyEvent.VK_DOWN:
-					game.rotate(+1);
+					isShiftPressed = true; // La touche Maj droite est enfoncée
 					break;
 				case KeyEvent.VK_LEFT:
 					game.move(-1);
@@ -286,9 +286,6 @@ public class Tetris extends JPanel {
 				case KeyEvent.VK_SPACE:
 					game.dropDown();
 					game.score += 1;
-					break;
-				case KeyEvent.VK_SHIFT:
-					isShiftPressed = true; // La touche Maj droite est enfoncée
 					break;
 				} 
 				
