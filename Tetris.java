@@ -6,9 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 public class Tetris extends JPanel {
 
@@ -87,7 +87,32 @@ public class Tetris extends JPanel {
 	private Color[][] well; // plateau de jeu avec les cases qui sont des couleurs
 	
 	private static boolean gameOver;
+	private static int timeRemaining;
+	private static boolean timedMode = false;
 	
+
+	static String choixOption(){
+		String[] options = {"normal", "contre la montre"};
+        int choice = JOptionPane.showOptionDialog(
+                null,
+                "",
+                "TETRIS",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+		if (choice == JOptionPane.YES_OPTION) {
+			// L'utilisateur a choisi le mode normal
+			return "normal";
+		} else{
+			// L'utilisateur a choisi le mode contre la montre
+			timedMode = true;
+			return "contre la montre";
+		}
+	}
+
+
 	// création de la bordure et initialisation des pièces qui tombent
 	private void init() {
 		well = new Color[12][24];
@@ -99,8 +124,10 @@ public class Tetris extends JPanel {
 					well[i][j] = Color.BLACK;
 				}
 			}
-		}
+		}		
 		newPiece(); // création d'une pièce
+
+		if(timedMode == true){timeRemaining = 60;}
 	}
 	
 	// envoie d'une nouvelle pièce au hasard
@@ -231,7 +258,12 @@ public class Tetris extends JPanel {
 					   25, 25);
 		}
 	}
-	
+	// gestion du temps pour le contre la montre
+	private void drawTime(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.drawString("Time: " + timeRemaining, 19 * 12, 50);
+	}
+
 	@Override 
 	public void paintComponent(Graphics g)
 	{
@@ -244,6 +276,8 @@ public class Tetris extends JPanel {
 			}
 		}
 
+		// contre la montre
+		if(timedMode == true){drawTime(g);}
 
 		// affiche le score
 		g.setColor(Color.WHITE);
@@ -272,6 +306,8 @@ public class Tetris extends JPanel {
 	}
 
 	public static void main(String[] args) {
+		String choix = choixOption();
+		
 		JFrame f = new JFrame("Tetris");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(12*26+10, 26*23+25);
@@ -319,6 +355,16 @@ public class Tetris extends JPanel {
 
 						if(!gameOver){
 							game.dropDown();
+						}
+
+						if(timedMode == true){
+							timeRemaining--;
+
+							if (timeRemaining <= 0) {
+								// Temps écoulé, fin du jeu
+								System.out.println("Game Over - Time's up!");
+								gameOver = true;
+							}
 						}
 					} catch ( InterruptedException e ) {}
 				}
