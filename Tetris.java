@@ -134,7 +134,7 @@ public class Tetris extends JPanel {
 	public void newPiece() {
 		pieceOrigin = new Point(5, 2); // point d'apparition du centre de la pièce
 		rotation = 0;
-		if (nextPieces.isEmpty()) {
+		if (nextPieces.isEmpty() || nextPieces.size() == 1) {
 			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
 			Collections.shuffle(nextPieces);
 		}
@@ -293,15 +293,20 @@ public class Tetris extends JPanel {
 		int blockSize = 25;
 		int startX = 19 * blockSize;
 		int startY = 110;
-	
-		int nextPiece = nextPieces.get(0);
+		int nextPiece;
+		if (nextPieces != null && nextPieces.size() > 0) {
+			for (int i = 0; i < nextPieces.size(); i++) {
+				for (int j = 0; j < nextPieces.get(i).SIZE; j++) {
+					nextPiece = nextPieces.get(0);
 
-	
-		g.setColor(tetraminoColors[nextPiece]);
-		for (Point p : Tetraminos[nextPiece][0]) {
-			int x = 25 + p.x * blockSize;
-			int y = p.y * blockSize;
-			g.fillRect(x, y, blockSize, blockSize);
+					g.setColor(tetraminoColors[nextPiece]);
+					for (Point p : Tetraminos[nextPiece][0]) {
+						int x = 25 + p.x * blockSize;
+						int y = p.y * blockSize;
+						g.fillRect(x, y, blockSize, blockSize);
+					}
+				}
+			}
 		}
 	}
 
