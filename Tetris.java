@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
@@ -83,7 +84,7 @@ public class Tetris extends JPanel {
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>(); // pièce suivante
 
-	private long score; // score
+	private static long score; // score
 	private Color[][] well; // plateau de jeu avec les cases qui sont des couleurs
 	
 	private static boolean gameOver;
@@ -142,13 +143,28 @@ public class Tetris extends JPanel {
 		nextPieces.remove(0);
 	}
 	
+	public static void endGame()
+	{
+		// affichage du score final
+		JFrame fenetre = new JFrame("Score");
+		JLabel message = new JLabel("Score : " + score);
+		fenetre.add(message);
+		// Configuration de la taille de la fenêtre
+		fenetre.setSize(250, 250);
+		// Définition du comportement à la fermeture de la fenêtre
+		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Rendre la fenêtre visible
+		fenetre.setVisible(true);
+	}
 
 	public void checkGameOver() {
 		if (collidesAt(pieceOrigin.x, pieceOrigin.y, rotation)) {
 			// La pièce est arrêtée en haut, le jeu est terminé
 			System.out.println("Game Over");
+
+			endGame();
+
 			gameOver = true;
-			// Arrêtez ici toute logique de jeu supplémentaire, comme l'arrêt du thread qui fait tomber la pièce
 		}
 	}
 
@@ -354,7 +370,7 @@ public class Tetris extends JPanel {
 		// fait tomber la pièce à chaque seconde
 		new Thread() {
 			@Override public void run() {
-				while (true) {
+				while (gameOver != true) {
 					try {					
 						Thread.sleep(1000);
 
@@ -368,6 +384,9 @@ public class Tetris extends JPanel {
 							if (timeRemaining <= 0) {
 								// Temps écoulé, fin du jeu
 								System.out.println("Game Over - Time's up!");
+
+								endGame();
+
 								gameOver = true;
 							}
 						}
