@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
 public class Tetris extends JPanel {
-
-	private static final long serialVersionUID = -8715353373678321308L;
 	
 
     // création des pièces
